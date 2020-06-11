@@ -13,7 +13,10 @@ class Square extends React.Component {
     return (
       <button 
         className="square" 
-        onClick={() => this.setState({value: 'X'})}
+        onClick={() => this.setState({value: 'X'}) 
+        /* We will take onClick from props instead! 
+          Right now, we are ignoring props.
+        */}
       >
         {this.state.value}
       </button>
@@ -31,21 +34,22 @@ class Board extends React.Component {
   }
 
   renderSquare(i) {
-    return (<Square 
-      value={this.state.squares[i]
-      /*each square now receives a value prop*/}
-      onClick={() => this.handleClick(i)
-      /*handleClick will handle change in Square's value.
-        This gives Square a way to update Board's state.
+    return (
+      <Square 
+        value={this.state.squares[i]
+        /*each square now receives a value prop*/}
+        onClick={() => this.handleClick(i)
+        /*handleClick will handle change in Square's value.
+          This gives Square a way to update Board's state.
 
-        Since state is considered private to the component that
-        defines it, we can't update Board's state directly from 
-        Square.
-      
-        Here, we are passing down handleClick from the 
-        Board to the Square.
-        Square will call the function when a square is clicked
-      */}
+          Since state is considered private to the component that
+          defines it, we can't update Board's state directly from 
+          Square.
+        
+          Here, we are passing down handleClick from the 
+          Board to the Square.
+          Square will call the function when a square is clicked
+        */}
       />
     );
   }
