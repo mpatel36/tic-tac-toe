@@ -3,26 +3,36 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-  /*Deleted the constructor from Square bc Square no
-    longer keeps track of game's state. */
+  /*Let's review what's happening in Square
+
+    1. The onClick prop on the built-in DOM <button> compo
+      tells React to set up a click event listener.
+      
+    2. When button is clicked, React will call onClick event
+      handler which has been defined in render.
+
+    3. Event handler calls this.props.onClick().
+      Square's onClick prop  
+    
+    4. Since Board passed this.handleClick to Square,
+      Square calls this.handleClick when clicked.  
+      
+    5. We haven't defined the handleClick method yet, so 
+      our code crashes:
+
+      TypeError: this.handleClick is not a function
+
+      */
+
   render() {
     return (
       <button 
         className="square" 
-        onClick={() => this.props.onClick()
-        /* 
-          Replaced 'this.setState()' with 
-          'this.props.onClick()' in Square's render method.
-        */}
+        onClick={() => this.props.onClick()}
       >
-        {this.props.value
-        /*Replaced 'this.state.value' with
-          'this.props.value'.
-        */}
+        {this.props.value}
       </button>
     );
-    /*Each square now receives uses the
-      onclick and value from prop*/
   }
 }
 
