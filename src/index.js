@@ -3,26 +3,31 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-  /*Let's review what's happening in Square
-
-    1. The onClick prop on the built-in DOM <button> compo
-      tells React to set up a click event listener.
-      
-    2. When button is clicked, React will call onClick event
-      handler which has been defined in render.
-
-    3. Event handler calls this.props.onClick().
-      Square's onClick prop  
-    
-    4. Since Board passed this.handleClick to Square,
-      Square calls this.handleClick when clicked.  
-      
-    5. We haven't defined the handleClick method yet, so 
-      our code crashes:
+  /*We resolve the following
 
       TypeError: this.handleClick is not a function
+    by adding handleClick to Board class.
 
-      */
+    Like before we are able to click on Squares to fill them.
+
+    However now the state is stored in the Board component
+    instead of individual Square compos.
+
+    When board state changes, Square components 
+    re-render automatically!
+
+    Keeping state of the squares in the Board will help us
+    determine the winner.
+
+    In React Terms, the Square components are now 
+    "controlled components". That's because the Squares no
+    longer maintain state, but rather the Squares receive 
+    values from the Board component and inform the Board
+    component when clicked.
+
+    Notice in handleClick we will call .slice() to create 
+    a copy of squares array.
+  */
 
   render() {
     return (
@@ -42,6 +47,17 @@ class Board extends React.Component {
     this.state = {
       squares: Array(9).fill(null)
     };
+  }
+
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    /*By calling .slice() we are creating a copy of squares
+      array to modify instead of the existing array. 
+      
+      We'll explain why we create a copy later*/
+
+    squares[i] = 'X';
+    this.setState({squares: squares}); 
   }
 
   renderSquare(i) {
