@@ -28,7 +28,7 @@ class Square extends React.Component {
         /*X will appear on board.
         Now numbers do not appear because the state value is
         being taken, not props. Board's renderSquare currently
-        sends props to Square, but they are ignored*/}
+        sends props to Square, but they are ignored.*/}
       </button>
     );
   }
