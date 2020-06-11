@@ -3,31 +3,32 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: null,
-    };
-  }
+  /*Deleted the constructor from Square bc Square no
+    longer keeps track of game's state. */
   render() {
     return (
       <button 
         className="square" 
-        onClick={() => this.setState({value: 'X'}) 
-        /* We will take onClick from props instead! 
-          Right now, we are ignoring props.
+        onClick={() => this.props.onClick()
+        /* 
+          Replaced 'this.setState()' with 
+          'this.props.onClick()' in Square's render method.
         */}
       >
-        {this.state.value}
+        {this.props.value
+        /*Replaced 'this.state.value' with
+          'this.props.value'.
+        */}
       </button>
     );
+    /*Each square now receives uses the
+      onclick and value from prop*/
   }
 }
 
 class Board extends React.Component {
   constructor(props) {
     super(props);
-    /*Below we are lifting state into a parent component.*/
     this.state = {
       squares: Array(9).fill(null)
     };
@@ -36,25 +37,10 @@ class Board extends React.Component {
   renderSquare(i) {
     return (
       <Square 
-        value={this.state.squares[i]
-        /*each square now receives a value prop*/}
-        onClick={() => this.handleClick(i)
-        /*handleClick will handle change in Square's value.
-          This gives Square a way to update Board's state.
-
-          Since state is considered private to the component that
-          defines it, we can't update Board's state directly from 
-          Square.
-        
-          Here, we are passing down handleClick from the 
-          Board to the Square.
-          Square will call the function when a square is clicked
-        */}
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
       />
     );
-    /* ^ if returning multi-line components need parenthesis ^
-      Do this so JS does not add a semicolon after 'return' 
-      and break your code */
   }
 
   render() {
