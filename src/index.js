@@ -52,6 +52,9 @@ class Board extends React.Component {
         */}
       />
     );
+    /* ^ if returning multi-line components need parenthesis ^
+      Do this so JS does not add a semicolon after 'return' 
+      and break your code */
   }
 
   render() {
