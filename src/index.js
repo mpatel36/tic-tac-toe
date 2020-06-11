@@ -24,7 +24,8 @@ class Square extends React.Component {
     longer maintain state, but rather the Squares receive 
     values from the Board component and inform the Board
     component when clicked.
-
+    ...
+    
     Notice in handleClick we will call .slice() to create 
     a copy of squares array.
   */
