@@ -12,23 +12,10 @@ class Square extends React.Component {
   render() {
     return (
       <button 
-          className="square" 
-          onClick={() => this.setState({value: 'X'}) 
-          /*setState from an onclick handler in the rendor
-          method tells React to rerender Square when button 
-          clicked. 
-          When you call set-state in a component
-          REact automatically updates the child components
-          inside of it too.
-          Currently each Square compo maintains games state.
-          To check for winner maintain the value of each of the
-          9 squares in one location.*/}
+        className="square" 
+        onClick={() => this.setState({value: 'X'})}
       >
-        {this.state.value 
-        /*X will appear on board.
-        Now numbers do not appear because the state value is
-        being taken, not props. Board's renderSquare currently
-        sends props to Square, but they are ignored.*/}
+        {this.state.value}
       </button>
     );
   }
@@ -37,13 +24,30 @@ class Square extends React.Component {
 class Board extends React.Component {
   constructor(props) {
     super(props);
+    /*Below we are lifting state into a parent component.*/
     this.state = {
       squares: Array(9).fill(null)
     };
   }
 
   renderSquare(i) {
-    return <Square value={i}/>;
+    return (<Square 
+      value={this.state.squares[i]
+      /*each square now receives a value prop*/}
+      onClick={() => this.handleClick(i)
+      /*handleClick will handle change in Square's value.
+        This gives Square a way to update Board's state.
+
+        Since state is considered private to the component that
+        defines it, we can't update Board's state directly from 
+        Square.
+      
+        Here, we are passing down handleClick from the 
+        Board to the Square.
+        Square will call the function when a square is clicked
+      */}
+      />
+    );
   }
 
   render() {
