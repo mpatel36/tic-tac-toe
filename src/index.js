@@ -2,6 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 /* Showing the Past Moves:
+
+  we know that React elements are first-class JS objects --
+  -- we can pass them around in our applications --
+  -- we can use an array of React elements to render multiple
+    items
+
   we want to display a list of buttons to "jump" to 
   past moves
 
@@ -77,7 +83,20 @@ import './index.css';
     mapping data to other data, for example
         const numbers = [1, 2, 3];
         const doubled = numbers.map(x => x * 2); // [2, 4, 6]
-          
+    
+    in React elements are first-class JS objects --
+    -- we can pass them around in our applications --
+    -- we can use an array of React elements to render
+      multiple items
+
+    in JS, all functions are first-class objects. Meaning:
+    -- A function is an instance of the Object type --
+    -- A function can have properties and has a link 
+      back to its constructor method --
+    -- You can store the function in a variable --
+    -- You can pass the function as a parameter 
+      to another function --
+    -- You can return the function from a function
 */
 /*
 */
