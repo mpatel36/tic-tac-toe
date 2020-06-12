@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-/* Function Components:
+/* Function Components
   we change the Square to be a "funciton component"
 
   "function components are a simple way to write 
@@ -16,7 +16,7 @@ import './index.css';
   classes and many components can be expressed this way.
 
   DONE: 
-    converted Square class to a 'Function Component"
+    converted Square class to a 'Functional Component"
 
 
   TODO:
@@ -24,16 +24,23 @@ import './index.css';
     how you can build 'pure components'
 
 */
-
+/*
+*/
 function Square(props) {
   /*Square is now a "Function Component".
     We replaced the Square class with this 
     function!
+
+    We change this.props to just props.
   */
   return (
     <button
       className = "square"
-      onClick={props.onClick}
+      onClick={props.onClick
+      /* We changed onClick={() => this.props.onClick()}
+        to a shorter  onClick={props.onClick} 
+        (note the lack of parentheses on both sides)
+      */}
     >
       {props.value}
     </button>
