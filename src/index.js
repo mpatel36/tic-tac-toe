@@ -1,34 +1,50 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+/* Immutability
 
-class Square extends React.Component {
-  /*We resolve the following
+  There are 2 ways to change data:
+  1. mutate it by directly changing the data's values...
+  
+  2. replace data with a new copy which has desired
+    changes (Immutability)
 
-      TypeError: this.handleClick is not a function
-    by adding handleClick to Board class.
+  immutability is better:
 
-    Like before we are able to click on Squares to fill them.
+  A. Complex features become simple:
+    an ability to undo and redo actions is a common item
+    in applications.
 
-    However now the state is stored in the Board component
-    instead of individual Square compos.
+    avoiding mutation lets us keep previous versions of the
+    game's history intact and reuse them later.
 
-    When board state changes, Square components 
-    re-render automatically!
+  B. Detecting changes:
+    detection in mutable objects is tough.
 
-    Keeping state of the squares in the Board will help us
-    determine the winner.
+    it requires the mutable object to be compared to 
+    previous copies of itself and the whole object tree to 
+    be traversed!
 
-    In React Terms, the Square components are now 
-    "controlled components". That's because the Squares no
-    longer maintain state, but rather the Squares receive 
-    values from the Board component and inform the Board
-    component when clicked.
-    ...
+    detecting changes in immutable objects is easy.
+
+    if the immutable object referenced is different than the 
+    previous one, then the object has changed.
+  
+  C. Determining when to re-render in React:
+    main benefit of immutability is it helps you build
+    "pure components".
+
+    it helps to determine when a component is re-rendering.
     
-    Notice in handleClick we will call .slice() to create 
-    a copy of squares array.
+  DONE: -
+
+  TODO:
+    learn more about shouldComponentUpdate() and 
+    how you can build 'pure components'
+
   */
+class Square extends React.Component {
+  
 
   render() {
     return (
