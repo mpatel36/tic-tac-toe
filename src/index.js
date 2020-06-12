@@ -27,20 +27,20 @@ import './index.css';
       differentiate each list item from its siblings --
     -- if we were displaying data from a database, database
       IDs could be used as keys
-
+    
     (TLDR); Keys tell React about the identity of each compon 
     which allows React to maintain state between re-renders.
     
-    -- when a list is re-rendered React takes each list 
+    a- when a list is re-rendered React takes each list 
       item's key and searches the previous list's items for
       a matching key --
-    -- if the current list has a key that didn't exist before,
+    b- if the current list has a key that didn't exist before,
       React creates a compon --
-    -- if the current list is missing a key that existed in
+    c- if the current list is missing a key that existed in
       the previous list, REact destroys the corresponding 
       compon --
-    -- if two keys match, the component is moved --
-    -- if a component key changes, the component will be 
+    d- if two keys match, the component is moved --
+    e- if a component key changes, the component will be 
       destroyed and re-created with a new state.
  ____________________________________________________________
   DONE: 
