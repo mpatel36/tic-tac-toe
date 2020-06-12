@@ -1,46 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-/* Implementing Time Travel:
-
-  1. In Game's render, we add the key as <li key={move}>
-    Then react's key warning should dissapear
-
-  2. we add stepNumber to the Game compon's state to indicate
-    which step we're currently viewing, initialize to 0
-
-  3. we define the jumpTo method in Game to update that 
-    stepNumber. --
-    -- We also set xIsNext to true if number we're changing
-    stepNumber to is even
-
-  4. we make these changes to handleCLick:
-
-    a- 'stepNumber' state should reflects the most recent 
-      move made so we need to update 'stepNumber' by setting
-      stepNumber: history.length in this.setState
-
-    b- we also replace reading this.state.history with
-      this.state.history.slice(0, this.state.stepNumber + 1)
-
-      -- this ensures that if we "go back in time" and then
-        make a new move from that point, we throw away all
-        "future" history that had been saved since then 
-        (because this history would now be incorrect) --
-
-  5- finally we modify Game compon's render method from always
-    rendering the last move to rendering the currently 
-    selected move according to 'stepNumber'
-
-  *** Now if we click on any step in the game history, the 
-  board should update to show what the board looked like
-  after that step occurred!
- ____________________________________________________________
-  DONE:
-    pick keys for mapped history list of moves in
-    Game render (and silence the warning)
-
-    implement jumpTo() in Game compon
+/* Complete Tic-tac toe:
 
   TODO:
     learn more about shouldComponentUpdate() and 
