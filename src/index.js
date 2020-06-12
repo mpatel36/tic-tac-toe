@@ -1,61 +1,43 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-/* Immutability
+/* Function Components:
+  we change the Square to be a "funciton component"
 
-  There are 2 ways to change data:
-  1. mutate it by directly changing the data's values...
-  
-  2. replace data with a new copy which has desired
-    changes (Immutability)
+  "function components are a simple way to write 
+  components that only contain a render method and 
+  don't have their own state"
 
-  immutability is better:
+  rather than defining a class that extends
+  React.Component, write a function that takes
+  props as input and returns wha should be rendered!
 
-  A. Complex features become simple:
-    an ability to undo and redo actions is a common item
-    in applications.
+  funct. compons. are less tedious to write than
+  classes and many components can be expressed this way.
 
-    avoiding mutation lets us keep previous versions of the
-    game's history intact and reuse them later.
+  DONE: 
+    converted Square class to a 'Function Component"
 
-  B. Detecting changes:
-    detection in mutable objects is tough.
-
-    it requires the mutable object to be compared to 
-    previous copies of itself and the whole object tree to 
-    be traversed!
-
-    detecting changes in immutable objects is easy.
-
-    if the immutable object referenced is different than the 
-    previous one, then the object has changed.
-  
-  C. Determining when to re-render in React:
-    main benefit of immutability is it helps you build
-    "pure components".
-
-    it helps to determine when a component is re-rendering.
-    
-  DONE: -
 
   TODO:
     learn more about shouldComponentUpdate() and 
     how you can build 'pure components'
 
-  */
-class Square extends React.Component {
-  
+*/
 
-  render() {
-    return (
-      <button 
-        className="square" 
-        onClick={() => this.props.onClick()}
-      >
-        {this.props.value}
-      </button>
-    );
-  }
+function Square(props) {
+  /*Square is now a "Function Component".
+    We replaced the Square class with this 
+    function!
+  */
+  return (
+    <button
+      className = "square"
+      onClick={props.onClick}
+    >
+      {props.value}
+    </button>
+  )
 }
 
 class Board extends React.Component {
@@ -68,11 +50,6 @@ class Board extends React.Component {
 
   handleClick(i) {
     const squares = this.state.squares.slice();
-    /*By calling .slice() we are creating a copy of squares
-      array to modify instead of the existing array. 
-      
-      We'll explain why we create a copy later*/
-
     squares[i] = 'X';
     this.setState({squares: squares}); 
   }
