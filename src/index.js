@@ -25,7 +25,6 @@ import './index.css';
                 render method of “Game”."
     -- what does this warning mean? TBD --
 
-
   DONE: 
     mapped history of moves to React elements 
 
