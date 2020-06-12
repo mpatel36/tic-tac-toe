@@ -1,70 +1,54 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-/* Adding Time Travel:
-  (Want to store a history of moves)
+/* Showing the Past Moves:
+  Since we record the game's history, we can now display
+  it to player as a list of past moves
 
-  Recall slice() created a new copy of the 
-  [] 'squares' after every move and treated it as immutable
+  we know that React elements are first-class JS objects --
+  -- we can pass them around in our applications --
+  -- we can use an array of React elements to render multiple
+    items
 
-  this lets us store every past version of 'squares'
-  array and navigate between turns that already happened
+  we want to display a list of buttons to "jump" to 
+  past moves
 
-  we will store past 'squares' arrays in one array 
-  called 'history'(history represents all board states, 
-  from first to the last move)
+  using map method, we can map history of moves to React
+  elements representing buttons on the screen 
 
-            history = [
-              // before first move
-              {squares: squares1},
-              // after first move
-              {squares: squares2},
-              // after second move
-              ...
-            ])
+  1. we map over the history in the Game's render
+    -- we see a list of moves that have occurred in game and
+    warning that says:
 
-  *** which component should own history? the Game --
-  -- placing history state in Game compon lets us remove
-  the 'squares' state from its child, Board compon. --
-  -- just like we "lifted state up" from Square into Board
-  compon we will lift it up from the Board into the top-
-  level Game compon --
-  -- then the Game compon has full control over Board's 
-  data and the Game can instruct Board to render 
-  previous turns from 'history'    
+              "Warning: Each child in an array or iterator 
+                should have a unique “key” prop. Check the 
+                render method of “Game”."
+    -- what does this warning mean? TBD --
 
-  1. we set up initial state for the Game compon in its
-    constructor
-  2. we make Board compon receive squares and onClick props
-    from the Game compon
-
-    A.  Delete constructor in Board
-    B.  Replace this.state.squares[i] with 
-        this.props.squares[i]
-    C.  Replace this.handleClick(i) with
-        this.props.onClick(i) in Board's 
-        renderSquare
-  3. Since Game compon is now rendering game's status,
-    we refactor Board's render method by removing
-    corresponding code. 
 
   DONE: 
-    1 thru 3 above, --
-    -- Game compon's render updated to use the most recent
-    history entry to determine and display the game's
-    status,
+    mapped history of moves to React elements 
 
   TODO:
+    Resolve warning "each child in array or iterator should
+    have a unique key prop"
+
     learn more about shouldComponentUpdate() and 
     how you can build 'pure components'
 
   COOL:
     unlike array push() method, concat() doesn't
     mutate original array
-      
+
+    in JS, arrays have a map() method that is used for 
+    mapping data to other data, for example
+          const numbers = [1, 2, 3];
+          const doubled = numbers.map(x => x * 2); // [2, 4, 6]
+            
 */
 /*
 */
+
 function Square(props) {
   return (
     <button
@@ -77,28 +61,15 @@ function Square(props) {
 }
 
 class Board extends React.Component {
-  /* 
-    Board no longer keeps track of state,
-    [] squares and handleClick moved to Game
-  */
-  
   renderSquare(i) {
     return (
       <Square 
         value={this.props.squares[i]}
-        onClick={() => this.props.onClick(i)
-        /* 
-          moved [] squares and handleClick to Game
-        */}
+        onClick={() => this.props.onClick(i)}
       />
     );
   }
-
   render() {
-    /*
-      removed code that renders game status since Game
-      compon is now rendering game status
-    */
     return (
       <div>
         <div className="board-row">
@@ -115,6 +86,79 @@ class Board extends React.Component {
           {this.renderSquare(6)}
           {this.renderSquare(7)}
           {this.renderSquare(8)}
+        </div>
+      </div>
+    );
+  }
+}
+
+class Game extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      history: [{
+        squares: Array(9).fill(null),
+      }],
+      xIsNext: true,
+    };
+  }
+
+  handleClick(i) {
+    const history = this.state.history
+    const current = history[history.length - 1]
+    const squares = current.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    squares[i] = this.state.xIsNext ? 'X':'O';
+    this.setState({
+      history: history.concat([{
+        squares: squares,
+      }]),
+      xIsNext: !this.state.xIsNext,
+    }); 
+  }
+  render() {
+    const history = this.state.history;
+    const current = history[history.length - 1];
+    const winner = calculateWinner(current.squares);
+    /* 
+      1. map over history --
+      -- for each move in the game's history, we create a 
+      list item <li> which contains a <button>, --
+      -- the button has a onClick handler which calls 
+      this.jumpTo() 
+    */
+    const moves = history.map((step, move) => {
+      const desc = move ?
+        'Go to move #' + move :
+        'Go to game start';
+      return (
+        <li>
+          <button onClick={() => this.jumpTo(move)}>
+            {desc}
+          </button>
+        </li>
+      );
+    })
+    let status;
+    if (winner) {
+      status = 'Winner: ' + winner;
+    } else {
+      status = 'Next player: ' 
+        + (this.state.xIsNext ? 'X': 'O');
+    }
+    return (
+      <div className="game">
+        <div className="game-board">
+          <Board 
+            squares={current.squares}       
+            onClick={(i) => this.handleClick(i)}
+          />
+        </div>
+        <div className="game-info">
+          <div>{status}</div>
+          <ol>{/* TODO */}</ol>
         </div>
       </div>
     );
@@ -140,79 +184,6 @@ function calculateWinner(squares) {
     }
   }
   return null;
-}
-
-class Game extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      history: [{
-        squares: Array(9).fill(null),
-      }],
-      xIsNext: true,
-      /* 
-        initial state for the Game compon created
-      */
-    };
-  }
-
-  handleClick(i) {
-    /* 
-      after getting the most recent Board state 
-      from history,
-      -- determines if a new state will be created and
-      updates xIsNext /concatenates updated 'squares' 
-      to history,
-      -- otherwise ignores the click
-    */
-    const history = this.state.history
-    const current = history[history.length - 1]
-    const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
-      return;
-    }
-    squares[i] = this.state.xIsNext ? 'X':'O';
-    this.setState({
-      history: history.concat([{
-        squares: squares,
-      }]),
-      xIsNext: !this.state.xIsNext,
-    }); 
-  }
-  render() {
-    /*
-      uses the most recent history entry to
-      determine and display the game's status
-    */
-    const history = this.state.history;
-    const current = history[history.length - 1]
-    const winner = calculateWinner(current.squares)
-    let status;
-    if (winner) {
-      status = 'Winner: ' + winner;
-    } else {
-      status = 'Next player: ' 
-        + (this.state.xIsNext ? 'X': 'O');
-    }
-    return (
-      <div className="game">
-        <div className="game-board">
-          <Board 
-            squares={current.squares}       
-            onClick={(i) => this.handleClick(i)
-            /* 
-              Board now has a squares prop and an 
-              onClick prop.
-            */}
-          />
-        </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{/* TODO */}</ol>
-        </div>
-      </div>
-    );
-  }
 }
 
 // ========================================
