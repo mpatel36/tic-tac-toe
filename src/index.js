@@ -1,58 +1,48 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-/* Showing the Past Moves:
+/* Implementing Time Travel:
 
-  we know that React elements are first-class JS objects --
-  -- we can pass them around in our applications --
-  -- we can use an array of React elements to render multiple
-    items
+  1. In Game's render, we add the key as <li key={move}>
+    Then react's key warning should dissapear
 
-  we want to display a list of buttons to "jump" to 
-  past moves
+  2. we add stepNumber to the Game compon's state to indicate
+    which step we're currently viewing, initialize to 0
 
-  using map method, we can map history of moves to React
-  elements representing buttons on the screen 
+  3. we define the jumpTo method in Game to update that 
+    stepNumber. --
+    -- We also set xIsNext to true if number we're changing
+    stepNumber to is even
 
-  1. we map over the history in the Game's render
-    -- we see a list of moves that have occurred in game and
-      warning that says:
-              "Warning: Each child in an array or iterator 
-                should have a unique “key” prop. Check the 
-                render method of “Game”."
-    -- what does this warning mean? We need to specify keys --
-    -- React is a computer program and doesn't know how to 
-      arrange items in the list as we intended --
-    -- we need to specify key property for each list item to
-      differentiate each list item from its siblings --
-    -- if we were displaying data from a database, database
-      IDs could be used as keys
-    
-    (TLDR); Keys tell React about the identity of each compon 
-    which allows React to maintain state between re-renders.
-    
-    a- when a list is re-rendered React takes each list 
-      item's key and searches the previous list's items for
-      a matching key --
-    b- if the current list has a key that didn't exist before,
-      React creates a compon --
-    c- if the current list is missing a key that existed in
-      the previous list, REact destroys the corresponding 
-      compon --
-    d- if two keys match, the component is moved --
-    e- if a component key changes, the component will be 
-      destroyed and re-created with a new state.
+  4. we make these changes to handleCLick:
+
+    a- 'stepNumber' state should reflects the most recent 
+      move made so we need to update 'stepNumber' by setting
+      stepNumber: history.length in this.setState
+
+    b- we also replace reading this.state.history with
+      this.state.history.slice(0, this.state.stepNumber + 1)
+
+      -- this ensures that if we "go back in time" and then
+        make a new move from that point, we throw away all
+        "future" history that had been saved since then 
+        (because this history would now be incorrect) --
+
+  5- finally we modify Game compon's render method from always
+    rendering the last move to rendering the currently 
+    selected move according to 'stepNumber'
+
+  *** Now if we click on any step in the game history, the 
+  board should update to show what the board looked like
+  after that step occurred!
  ____________________________________________________________
-  DONE: 
-    mapped history of moves to React elements 
-    without uniqe keys
-
-  TODO:
+  DONE:
     pick keys for mapped history list of moves in
     Game render (and silence the warning)
 
     implement jumpTo() in Game compon
 
+  TODO:
     learn more about shouldComponentUpdate() and 
     how you can build 'pure components'
 
@@ -151,13 +141,20 @@ class Game extends React.Component {
       history: [{
         squares: Array(9).fill(null),
       }],
+      stepNumber: 0, /*2.*/
       xIsNext: true,
     };
   }
 
   handleClick(i) {
-    const history = this.state.history
-    const current = history[history.length - 1]
+    const history = this.state.history.slice(0, 
+      this.state.stepNumber + 1); /* 
+        4b.
+        Copy from 0 to stepNumber + 1
+        if we go back, all incorrect "future" history will 
+        be discarded
+      */
+    const current = history[history.length - 1];
     const squares = current.squares.slice();
     if (calculateWinner(squares) || squares[i]) {
       return;
@@ -167,26 +164,27 @@ class Game extends React.Component {
       history: history.concat([{
         squares: squares,
       }]),
+      stepNumber: history.length, /*4a.*/
       xIsNext: !this.state.xIsNext,
     }); 
   }
+  jumpTo(step) { /*3.*/
+    this.setState({
+      stepNumber: step, 
+      xIsNext: (step % 2) === 0,
+    });
+  }
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
+    const current = history[this.state.stepNumber]; /*5.*/
     const winner = calculateWinner(current.squares);
-    /* 
-      1. 
-      -- for each move in the game's history, we create a 
-      list item <li> which contains a <button>, --
-      -- the button has a onClick handler which calls 
-      this.jumpTo() 
-    */
+
     const moves = history.map((step, move) => {
       const desc = move ?
         'Go to move #' + move :
         'Go to game start';
       return (
-        <li>
+        <li key={move/*1.*/}>
           <button onClick={() => this.jumpTo(move)}>
             {desc}
           </button>
