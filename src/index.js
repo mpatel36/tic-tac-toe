@@ -2,14 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 /* Showing the Past Moves:
-  Since we record the game's history, we can now display
-  it to player as a list of past moves
-
-  we know that React elements are first-class JS objects --
-  -- we can pass them around in our applications --
-  -- we can use an array of React elements to render multiple
-    items
-
   we want to display a list of buttons to "jump" to 
   past moves
 
@@ -18,32 +10,74 @@ import './index.css';
 
   1. we map over the history in the Game's render
     -- we see a list of moves that have occurred in game and
-    warning that says:
-
+      warning that says:
               "Warning: Each child in an array or iterator 
                 should have a unique “key” prop. Check the 
                 render method of “Game”."
-    -- what does this warning mean? TBD --
+    -- what does this warning mean? We need to specify keys --
+    -- React is a computer program and doesn't know how to 
+      arrange items in the list as we intended --
+    -- we need to specify key property for each list item to
+      differentiate each list item from its siblings --
+    -- if we were displaying data from a database, database
+      IDs could be used as keys
 
+    (TLDR); Keys tell React about the identity of each compon 
+    which allows React to maintain state between re-renders.
+    
+    -- when a list is re-rendered React takes each list 
+      item's key and searches the previous list's items for
+      a matching key --
+    -- if the current list has a key that didn't exist before,
+      React creates a compon --
+    -- if the current list is missing a key that existed in
+      the previous list, REact destroys the corresponding 
+      compon --
+    -- if two keys match, the component is moved --
+    -- if a component key changes, the component will be 
+      destroyed and re-created with a new state.
+ ____________________________________________________________
   DONE: 
     mapped history of moves to React elements 
+    without uniqe keys
 
   TODO:
-    Resolve warning "each child in array or iterator should
-    have a unique key prop"
+    pick keys for mapped history list of moves in
+    Game render (and silence the warning)
+
+    implement jumpTo() in Game compon
 
     learn more about shouldComponentUpdate() and 
     how you can build 'pure components'
 
   COOL:
+    on Compon. keys:
+    -- 'key' is a special and reserved property in React 
+      (along with 'ref', a more advanced feature). When an 
+      element is created, React extracts the key property and
+      stores the key directly on the returned element. --
+    -- Even though key may look like it belongs in props, 
+      key cannot be referenced using this.props.key. --
+    -- React automatically uses key to decide which 
+      components to update. --
+    -- A component cannot inquire about its key. --
+    -- it is strongly recommended that you assign proper keys
+      whenever building dynamic lists since React is a 
+      computer program and doesn't know how to arrange items 
+      in the list as we intended --
+    -- we need to specify key property for each list item to
+      differentiate each list item from its siblings --
+    -- If no key is specified, React will present a warning 
+      and use the array index as a key by default.
+
     unlike array push() method, concat() doesn't
     mutate original array
 
     in JS, arrays have a map() method that is used for 
     mapping data to other data, for example
-          const numbers = [1, 2, 3];
-          const doubled = numbers.map(x => x * 2); // [2, 4, 6]
-            
+        const numbers = [1, 2, 3];
+        const doubled = numbers.map(x => x * 2); // [2, 4, 6]
+          
 */
 /*
 */
@@ -122,7 +156,7 @@ class Game extends React.Component {
     const current = history[history.length - 1];
     const winner = calculateWinner(current.squares);
     /* 
-      1. map over history --
+      1. 
       -- for each move in the game's history, we create a 
       list item <li> which contains a <button>, --
       -- the button has a onClick handler which calls 
@@ -157,7 +191,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{/* TODO */}</ol>
+          <ol>{moves}</ol>
         </div>
       </div>
     );
