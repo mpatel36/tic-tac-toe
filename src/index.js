@@ -1,46 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-/* Function Components
-  we change the Square to be a "funciton component"
+/* Taking Turns:
+  now we fix an obvious flaw in our game: the "Os" can't 
+  be marked on the board.
 
-  "function components are a simple way to write 
-  components that only contain a render method and 
-  don't have their own state"
+  we set the first move to be 'X' on default 
 
-  rather than defining a class that extends
-  React.Component, write a function that takes
-  props as input and returns wha should be rendered!
+  we set this default by modifying the 
+  initial state in our Board constructor
 
-  funct. compons. are less tedious to write than
-  classes and many components can be expressed this way.
+  we update the Board's handleClick function to flip the
+  value of xIsNext
+
+  now Xs and Os can take turns!
+
+  we change status text in Board's render so it shows which
+  player has the next turn.
 
   DONE: 
-    converted Square class to a 'Functional Component"
+    we set X as the default player, 
+    enable Xs and Os to take turns,
+    update the status for the player whose turn is next.
 
 
   TODO:
     learn more about shouldComponentUpdate() and 
     how you can build 'pure components'
-
 */
 /*
 */
 function Square(props) {
-  /*Square is now a "Function Component".
-    We replaced the Square class with this 
-    function!
-
-    We change this.props to just props.
-  */
   return (
     <button
       className = "square"
-      onClick={props.onClick
-      /* We changed onClick={() => this.props.onClick()}
-        to a shorter  onClick={props.onClick} 
-        (note the lack of parentheses on both sides)
-      */}
+      onClick={props.onClick}
     >
       {props.value}
     </button>
@@ -51,14 +45,27 @@ class Board extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      squares: Array(9).fill(null)
+      squares: Array(9).fill(null),
+      xIsNext: true,
+      /* 
+        modified the initial state to set
+        the first move to be 'X' on default.
+      */
     };
   }
 
   handleClick(i) {
+    /*
+      each time a player moves, xIsNext will be 
+      flipped to determine which player goes next and
+      the game state will be saved
+    */
     const squares = this.state.squares.slice();
-    squares[i] = 'X';
-    this.setState({squares: squares}); 
+    squares[i] = this.state.xIsNext ? 'X':'O';
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext,
+    }); 
   }
 
   renderSquare(i) {
@@ -71,7 +78,7 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player: X';
+    const status = 'Next player: ' + (this.state.xIsNext ? 'X':'O');
 
     return (
       <div>
