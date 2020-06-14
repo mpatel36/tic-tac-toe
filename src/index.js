@@ -103,13 +103,18 @@ class Game extends React.Component {
     const moveLocations = this.state.moveLocations;
     const winner = calculateWinner(current.squares);
     const moves = history.map((boardState, move) => {
+      const buttonStyle = move == this.state.stepNumber ?
+        'button-bold' : '';
       const desc = move ?
         'Go to move #' + move + ': located at ' 
           + '(' + moveLocations[move] +')' :
         'Go to game start';
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>
+          <button
+            className={`${buttonStyle} button`} 
+            onClick={() => this.jumpTo(move)}
+          >
             {desc}
           </button>
         </li>
