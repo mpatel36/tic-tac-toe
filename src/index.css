@@ -49,3 +49,20 @@ body {
     margin-left: 20px;
   }
   
+  .button {
+    background-color: #150047; /* Green */
+    border: none;
+    color: #fff;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .button-bold {
+    background-color: #ee9db8;
+    color: #000;
+    font-weight: bold;
+  }
+  
